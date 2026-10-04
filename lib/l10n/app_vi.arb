@@ -263,5 +263,12 @@
   "weakNetworkDownload": "Tải xuống",
   "weakNetworkBandwidth": "Băng thông",
   "weakNetworkLossRate": "Tỷ lệ mất gói",
-  "weakNetworkRules": "Quy tắc URL"
+  "weakNetworkRules": "Quy tắc URL",
+  "replayTasks": "Tác vụ phát lại",
+  "clearFinished": "Xóa tác vụ đã xong",
+  "statusWaiting": "Đang chờ",
+  "statusCancelled": "Đã hủy",
+  "statusPaused": "Đã tạm dừng",
+  "pause": "Tạm dừng",
+  "resume": "Tiếp tục"
 }

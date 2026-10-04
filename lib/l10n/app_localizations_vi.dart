@@ -1316,10 +1316,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get mcpRegenerateToken => 'Reset token';
 
   @override
-  String get mcpStatusRunning => 'Running';
+  String get statusRunning => 'Running';
 
   @override
-  String get mcpStatusStopped => 'Stopped';
+  String get statusStopped => 'Stopped';
 
   @override
   String get mcpClientLabel => 'AI client';
@@ -1395,4 +1395,25 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get mcpPrivacyHint =>
       'Only listens on 127.0.0.1 (this machine). Data leaves the app only when an AI client explicitly requests it via a tool.';
+
+  @override
+  String get replayTasks => 'Tác vụ phát lại';
+
+  @override
+  String get clearFinished => 'Xóa tác vụ đã xong';
+
+  @override
+  String get statusWaiting => 'Đang chờ';
+
+  @override
+  String get statusCancelled => 'Đã hủy';
+
+  @override
+  String get statusPaused => 'Đã tạm dừng';
+
+  @override
+  String get pause => 'Tạm dừng';
+
+  @override
+  String get resume => 'Tiếp tục';
 }

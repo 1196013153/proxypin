@@ -37,6 +37,7 @@ import 'package:proxypin/ui/component/widgets.dart';
 import 'package:proxypin/ui/configuration.dart';
 import 'package:proxypin/ui/content/panel.dart';
 import 'package:proxypin/ui/desktop/request/repeat.dart';
+import 'package:proxypin/utils/replay_task.dart';
 import 'package:proxypin/ui/desktop/setting/request_map.dart';
 import 'package:proxypin/ui/desktop/setting/script.dart';
 import 'package:proxypin/ui/desktop/widgets/highlight.dart';
@@ -504,7 +505,10 @@ class _RequestWidgetState extends State<RequestWidget> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return CustomRepeatDialog(onRepeat: () => onRepeat(request), prefs: prefs);
+          return CustomRepeatDialog(
+              onScheduled: (cfg) =>
+                  ReplayTaskManager.instance.start(request: request, action: () => onRepeat(request), config: cfg),
+              prefs: prefs);
         });
   }
 

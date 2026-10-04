@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:proxypin/l10n/app_localizations.dart';
 import 'package:proxypin/network/bin/server.dart';
 import 'package:proxypin/ui/component/multi_window.dart';
+import 'package:proxypin/ui/desktop/left_menus/replay_tasks.dart' as desktop;
+import 'package:proxypin/ui/mobile/request/replay_tasks.dart';
 import 'package:proxypin/ui/mobile/request/request_editor.dart';
 import 'package:proxypin/ui/toolbox/qr_code_page.dart';
 import 'package:proxypin/ui/toolbox/regexp.dart';
@@ -79,6 +81,18 @@ class _ToolboxState extends State<Toolbox> {
                       MultiWindow.openWindow('JavaScript', 'JavaScript', size: Size(960, size.height));
                     },
                   ),
+                  IconText(
+                      onTap: () {
+                        if (Platforms.isMobile()) {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) => const ReplayTasksPage()));
+                          return;
+                        }
+                        desktop.showReplayTasksDialog(context);
+                      },
+                      icon: Icons.schedule_outlined,
+                      text: localizations.replayTasks,
+                      tooltip: localizations.replayTasks),
                 ],
               ),
               const Divider(thickness: 0.3),

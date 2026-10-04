@@ -263,5 +263,12 @@
   "weakNetworkDownload": "ดาวน์โหลด",
   "weakNetworkBandwidth": "แบนด์วิดท์",
   "weakNetworkLossRate": "อัตราแพ็กเก็ตหาย",
-  "weakNetworkRules": "กฎ URL"
+  "weakNetworkRules": "กฎ URL",
+  "replayTasks": "งานส่งซ้ำ",
+  "clearFinished": "ล้างรายการที่เสร็จสิ้น",
+  "statusWaiting": "รออยู่",
+  "statusCancelled": "ยกเลิกแล้ว",
+  "statusPaused": "หยุดชั่วคราว",
+  "pause": "หยุดชั่วคราว",
+  "resume": "ทำงานต่อ"
 }

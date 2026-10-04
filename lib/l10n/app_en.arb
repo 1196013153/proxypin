@@ -440,8 +440,8 @@
   "mcpOneClick": "One-click setup on your computer",
   "mcpOneClickHint": "Copy the matching command and run it on the computer: Terminal for macOS/Linux, PowerShell for Windows. It auto-detects installed AI clients (Claude Code, Codex, Cursor, Gemini CLI) and configures them over Wi-Fi.",
   "mcpRegenerateToken": "Reset token",
-  "mcpStatusRunning": "Running",
-  "mcpStatusStopped": "Stopped",
+  "statusRunning": "Running",
+  "statusStopped": "Stopped",
   "mcpClientLabel": "AI client",
   "mcpTransportLabel": "Transport",
   "mcpCommandLabel": "Connect command",
@@ -465,5 +465,12 @@
   "mcpCopy": "Copy",
   "mcpCopied": "Copied",
   "mcpStartFailed": "MCP service failed to start",
-  "mcpPrivacyHint": "Only listens on 127.0.0.1 (this machine). Data leaves the app only when an AI client explicitly requests it via a tool."
+  "mcpPrivacyHint": "Only listens on 127.0.0.1 (this machine). Data leaves the app only when an AI client explicitly requests it via a tool.",
+  "replayTasks": "Replay Tasks",
+  "clearFinished": "Clear finished",
+  "statusWaiting": "Waiting",
+  "statusCancelled": "Cancelled",
+  "statusPaused": "Paused",
+  "pause": "Pause",
+  "resume": "Resume"
 }

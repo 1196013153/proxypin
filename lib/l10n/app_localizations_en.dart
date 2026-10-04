@@ -1322,10 +1322,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mcpRegenerateToken => 'Reset token';
 
   @override
-  String get mcpStatusRunning => 'Running';
+  String get statusRunning => 'Running';
 
   @override
-  String get mcpStatusStopped => 'Stopped';
+  String get statusStopped => 'Stopped';
 
   @override
   String get mcpClientLabel => 'AI client';
@@ -1401,4 +1401,25 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get mcpPrivacyHint =>
       'Only listens on 127.0.0.1 (this machine). Data leaves the app only when an AI client explicitly requests it via a tool.';
+
+  @override
+  String get replayTasks => 'Replay Tasks';
+
+  @override
+  String get clearFinished => 'Clear finished';
+
+  @override
+  String get statusWaiting => 'Waiting';
+
+  @override
+  String get statusCancelled => 'Cancelled';
+
+  @override
+  String get statusPaused => 'Paused';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get resume => 'Resume';
 }

@@ -375,5 +375,12 @@
   "weakNetworkDownload": "下行",
   "weakNetworkBandwidth": "頻寬",
   "weakNetworkLossRate": "遺失率",
-  "weakNetworkRules": "URL 規則"
+  "weakNetworkRules": "URL 規則",
+  "replayTasks": "重放任務",
+  "clearFinished": "清除已完成",
+  "statusWaiting": "等待中",
+  "statusCancelled": "已取消",
+  "statusPaused": "已暫停",
+  "pause": "暫停",
+  "resume": "繼續"
 }

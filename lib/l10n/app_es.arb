@@ -263,5 +263,12 @@
   "weakNetworkDownload": "Bajada",
   "weakNetworkBandwidth": "Ancho de banda",
   "weakNetworkLossRate": "Pérdida de paquetes",
-  "weakNetworkRules": "Reglas URL"
+  "weakNetworkRules": "Reglas URL",
+  "replayTasks": "Tareas de repetición",
+  "clearFinished": "Borrar finalizadas",
+  "statusWaiting": "En espera",
+  "statusCancelled": "Cancelado",
+  "statusPaused": "En pausa",
+  "pause": "Pausar",
+  "resume": "Reanudar"
 }

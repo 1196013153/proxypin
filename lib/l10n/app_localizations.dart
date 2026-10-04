@@ -2650,17 +2650,17 @@ abstract class AppLocalizations {
   /// **'Reset token'**
   String get mcpRegenerateToken;
 
-  /// No description provided for @mcpStatusRunning.
+  /// No description provided for @statusRunning.
   ///
   /// In en, this message translates to:
   /// **'Running'**
-  String get mcpStatusRunning;
+  String get statusRunning;
 
-  /// No description provided for @mcpStatusStopped.
+  /// No description provided for @statusStopped.
   ///
   /// In en, this message translates to:
   /// **'Stopped'**
-  String get mcpStatusStopped;
+  String get statusStopped;
 
   /// No description provided for @mcpClientLabel.
   ///
@@ -2805,6 +2805,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Only listens on 127.0.0.1 (this machine). Data leaves the app only when an AI client explicitly requests it via a tool.'**
   String get mcpPrivacyHint;
+
+  /// No description provided for @replayTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay Tasks'**
+  String get replayTasks;
+
+  /// No description provided for @clearFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear finished'**
+  String get clearFinished;
+
+  /// No description provided for @statusWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting'**
+  String get statusWaiting;
+
+  /// No description provided for @statusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get statusCancelled;
+
+  /// No description provided for @statusPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get statusPaused;
+
+  /// No description provided for @pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @resume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get resume;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

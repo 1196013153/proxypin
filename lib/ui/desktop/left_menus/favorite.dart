@@ -36,6 +36,7 @@ import 'package:proxypin/ui/component/utils.dart';
 import 'package:proxypin/ui/component/widgets.dart';
 import 'package:proxypin/ui/content/panel.dart';
 import 'package:proxypin/ui/desktop/request/repeat.dart';
+import 'package:proxypin/utils/replay_task.dart';
 import 'package:proxypin/utils/curl.dart';
 import 'package:proxypin/utils/lang.dart';
 import 'package:proxypin/utils/platform.dart';
@@ -224,7 +225,10 @@ class _FavoriteItemState extends State<_FavoriteItem> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return CustomRepeatDialog(onRepeat: () => onRepeat(request), prefs: prefs);
+          return CustomRepeatDialog(
+              onScheduled: (cfg) =>
+                  ReplayTaskManager.instance.start(request: request, action: () => onRepeat(request), config: cfg),
+              prefs: prefs);
         });
   }
 

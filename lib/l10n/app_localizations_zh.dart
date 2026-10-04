@@ -1306,10 +1306,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get mcpRegenerateToken => '重置令牌';
 
   @override
-  String get mcpStatusRunning => '运行中';
+  String get statusRunning => '运行中';
 
   @override
-  String get mcpStatusStopped => '已停止';
+  String get statusStopped => '已停止';
 
   @override
   String get mcpClientLabel => 'AI 客户端';
@@ -1384,6 +1384,27 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get mcpPrivacyHint => '仅监听 127.0.0.1（本机），数据只有在 AI 客户端通过工具明确请求时才会离开本应用。';
+
+  @override
+  String get replayTasks => '重放任务';
+
+  @override
+  String get clearFinished => '清除已完成';
+
+  @override
+  String get statusWaiting => '等待中';
+
+  @override
+  String get statusCancelled => '已取消';
+
+  @override
+  String get statusPaused => '已暂停';
+
+  @override
+  String get pause => '暂停';
+
+  @override
+  String get resume => '继续';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -2536,4 +2557,25 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get weakNetworkRules => 'URL 規則';
+
+  @override
+  String get replayTasks => '重放任務';
+
+  @override
+  String get clearFinished => '清除已完成';
+
+  @override
+  String get statusWaiting => '等待中';
+
+  @override
+  String get statusCancelled => '已取消';
+
+  @override
+  String get statusPaused => '已暫停';
+
+  @override
+  String get pause => '暫停';
+
+  @override
+  String get resume => '繼續';
 }
