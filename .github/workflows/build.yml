@@ -70,11 +70,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: proxypin-android-apk
-          path: build/app/outputs/flutter-apk/proxypin-android-*.apk
+          path: build/app/outputs/**/proxypin-android-*.apk
           if-no-files-found: error
 
       - name: Attach APK to release (tag push only)
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: build/app/outputs/flutter-apk/proxypin-android-*.apk
+          files: build/app/outputs/**/proxypin-android-*.apk
