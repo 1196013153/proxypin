@@ -190,7 +190,7 @@ class _FavoritePathListState extends State<_FavoritePathList> {
                               : favoritePath.url,
                           style: const TextStyle(fontSize: 13)),
                       subtitle: Text(localizations.favoritePathReplay,
-                          style: const TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.secondary)),
+                          style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.secondary)),
                       onTap: () => favoritePath.replay(),
                       trailing: IconButton(
                           icon: const Icon(Icons.delete_outline, size: 18),

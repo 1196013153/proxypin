@@ -19,6 +19,7 @@ import 'dart:io';
 import 'package:proxypin/network/channel/host_port.dart';
 import 'package:proxypin/network/http/content_type.dart';
 import 'package:proxypin/network/http/http.dart';
+import 'package:proxypin/network/http/websocket.dart';
 import 'package:proxypin/network/http/http_headers.dart';
 import 'package:proxypin/network/util/process_info.dart';
 import 'package:proxypin/ui/configuration.dart';

@@ -18,6 +18,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:proxypin/network/channel/channel.dart';
 import 'package:proxypin/network/channel/channel_context.dart';
 import 'package:proxypin/network/http/websocket.dart';
 import 'package:proxypin/network/util/compress.dart';
@@ -185,6 +186,9 @@ class ReportSseEventListener extends EventListener {
     // 定时兜底：不足阈值(低频 SSE)的缓冲也要在 1s 内送达
     _flushTimer = Timer.periodic(const Duration(seconds: 1), (_) => unawaited(_flush(force: true)));
   }
+
+  @override
+  void onRequest(Channel channel, HttpRequest request) {}
 
   /// 响应头到达即上报一次（对应 SSE 流式通道的 listener.onResponse 触发点）
   @override

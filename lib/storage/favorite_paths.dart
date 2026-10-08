@@ -83,8 +83,8 @@ class FavoritePathStorage {
 
   //刷新配置
   static Future<void> flushConfig() async {
-    var paths = await paths;
-    await Paths.getPath("favorite_paths.json").then((file) => file.writeAsString(jsonEncode(paths)));
+    var current = await paths;
+    await Paths.getPath("favorite_paths.json").then((file) => file.writeAsString(jsonEncode(current)));
     changeNotifier.value++;
   }
 }
