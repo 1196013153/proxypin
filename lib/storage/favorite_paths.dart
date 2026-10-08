@@ -94,6 +94,7 @@ class FavoritePath {
   String? name;
   String? method;
   String host;
+  int? port;
   String path;
   String scheme;
   DateTime createdAt;
@@ -102,6 +103,7 @@ class FavoritePath {
     this.name,
     this.method,
     required this.host,
+    this.port,
     required this.path,
     this.scheme = 'https',
     DateTime? createdAt,
@@ -119,6 +121,7 @@ class FavoritePath {
     return FavoritePath(
       method: request.method.name,
       host: hostAndPort?.host ?? uri?.host ?? '',
+      port: uri?.port ?? hostAndPort?.port,
       path: uri?.path ?? '/',
       scheme: scheme,
     );
@@ -129,6 +132,7 @@ class FavoritePath {
       name: json['name'],
       method: json['method'],
       host: json['host'] ?? '',
+      port: json['port'] == null ? null : int.tryParse(json['port'].toString()),
       path: json['path'] ?? '/',
       scheme: json['scheme'] ?? 'https',
       createdAt: json['createdAt'] == null ? null : DateTime.tryParse(json['createdAt']),
@@ -140,29 +144,39 @@ class FavoritePath {
       'name': name,
       'method': method,
       'host': host,
+      if (port != null) 'port': port,
       'path': path,
       'scheme': scheme,
       'createdAt': createdAt.toIso8601String(),
     };
   }
 
-  /// 去重键
-  String get key => '${method ?? "*"} $scheme://$host$path';
+  /// 是否为 scheme 默认端口
+  bool get _isDefaultPort =>
+      port == null || (scheme == 'https' && port == 443) || (scheme == 'http' && port == 80);
 
-  /// 完整 URL（不含 query）
-  String get url => '$scheme://$host$path';
+  /// 去重键
+  String get key => '${method ?? "*"} $url';
+
+  /// 完整 URL（不含 query，默认端口省略）
+  String get url => '$scheme://$host${_isDefaultPort ? '' : ':$port'}$path';
 
   /// 请求是否命中：host 精确 + path 精确（忽略 query）+ method 可选
   bool matches(HttpRequest request) {
     if (method != null && method!.isNotEmpty && method != request.method.name) {
       return false;
     }
-    var hostAndPort = request.hostAndPort;
-    if (hostAndPort != null && hostAndPort.host == host) {
-      return request.requestUri?.path == path;
-    }
     var uri = request.requestUri;
-    return uri != null && uri.host == host && uri.path == path;
+    if (uri == null) {
+      return false;
+    }
+    if (uri.host != host || uri.path != path) {
+      return false;
+    }
+    if (_isDefaultPort) {
+      return true;
+    }
+    return uri.port == port;
   }
 
   @override

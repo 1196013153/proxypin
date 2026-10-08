@@ -9,10 +9,18 @@ void main() {
     final fp = FavoritePath.fromRequest(request);
     expect(fp.scheme, 'https');
     expect(fp.host, 'api.example.com');
+    expect(fp.port, 8443);
     expect(fp.path, '/v1/chat');
     expect(fp.method, 'POST');
-    expect(fp.url, 'https://api.example.com/v1/chat');
-    expect(fp.key, 'POST https://api.example.com/v1/chat');
+    expect(fp.url, 'https://api.example.com:8443/v1/chat');
+    expect(fp.key, 'POST https://api.example.com:8443/v1/chat');
+  });
+
+  test('FavoritePath omits default port in url', () {
+    final https = FavoritePath.fromRequest(HttpRequest(HttpMethod.get, 'https://a.com/x'));
+    expect(https.url, 'https://a.com/x');
+    final http = FavoritePath.fromRequest(HttpRequest(HttpMethod.get, 'http://a.com/x'));
+    expect(http.url, 'http://a.com/x');
   });
 
   test('FavoritePath.fromJson/toJson round trip', () {
@@ -46,5 +54,15 @@ void main() {
     final fp = FavoritePath(host: 'api.example.com', path: '/v1/stream', method: null);
     expect(fp.matches(HttpRequest(HttpMethod.get, 'https://api.example.com/v1/stream')), isTrue);
     expect(fp.matches(HttpRequest(HttpMethod.post, 'https://api.example.com/v1/stream')), isTrue);
+  });
+
+  test('FavoritePath.matches honors port', () {
+    final fp = FavoritePath.fromRequest(HttpRequest(HttpMethod.get, 'http://a.com:9000/x'));
+    expect(fp.matches(HttpRequest(HttpMethod.get, 'http://a.com:9000/x?k=1')), isTrue);
+    expect(fp.matches(HttpRequest(HttpMethod.get, 'http://a.com/x')), isFalse);
+    expect(fp.matches(HttpRequest(HttpMethod.get, 'http://a.com:9001/x')), isFalse);
+
+    final defaultPort = FavoritePath.fromRequest(HttpRequest(HttpMethod.get, 'https://a.com/x'));
+    expect(defaultPort.matches(HttpRequest(HttpMethod.get, 'https://a.com/x')), isTrue);
   });
 }
