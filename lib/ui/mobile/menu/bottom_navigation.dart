@@ -24,6 +24,7 @@ import 'package:proxypin/network/components/manager/request_block_manager.dart';
 import 'package:proxypin/network/components/manager/request_rewrite_manager.dart';
 import 'package:proxypin/network/util/system_proxy.dart';
 import 'package:proxypin/storage/histories.dart';
+import 'package:proxypin/ui/component/config_backup.dart';
 import 'package:proxypin/ui/component/proxy_port_setting.dart';
 import 'package:proxypin/ui/configuration.dart';
 import 'package:proxypin/ui/mobile/menu/drawer.dart';
@@ -239,6 +240,19 @@ class SettingPage extends StatelessWidget {
                 title: Text(localizations.filter),
                 trailing: const Icon(Icons.keyboard_arrow_right),
                 onTap: () => navigator(context, FilterMenu(proxyServer: proxyServer))),
+          ]),
+          const SizedBox(height: 12),
+          // 配置备份
+          section([
+            ListTile(
+                title: Text(localizations.configBackupExport),
+                trailing: const Icon(Icons.keyboard_arrow_right),
+                onTap: () => ConfigBackupHelper.export(context)),
+            Divider(height: 0, thickness: 0.3, color: Theme.of(context).dividerColor.withValues(alpha: 0.22)),
+            ListTile(
+                title: Text(localizations.configBackupImport),
+                trailing: const Icon(Icons.keyboard_arrow_right),
+                onTap: () => ConfigBackupHelper.import(context)),
           ]),
           const SizedBox(height: 12),
           // Port and switches
