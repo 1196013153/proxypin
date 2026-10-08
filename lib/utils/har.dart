@@ -143,6 +143,59 @@ class Har {
     };
   }
 
+  /// 单条 SSE/WebSocket 消息上报的文本长度上限
+  static const int maxMessageTextLength = 64 * 1024;
+
+  /// 单条流式消息(SSE event)的 HAR 结构，用于远程上报增量上报。
+  /// `_id` 与对应请求一致，服务端可据此聚合；`_sse.index` 为该请求内消息序号。
+  static Map toHarMessage(HttpRequest request, WebSocketFrame frame, int index) {
+    var text = frame.payloadDataAsString;
+    if (text.length > maxMessageTextLength) {
+      text = '${text.substring(0, maxMessageTextLength)}...[truncated]';
+    }
+    return {
+      "startedDateTime": frame.time.toUtc().toIso8601String(),
+      "time": -1,
+      "pageref": "ProxyPin",
+      "_id": request.requestId,
+      "_phase": "message",
+      '_app': request.processInfo?.toJson(),
+      "_sse": {
+        "index": index,
+        "isFromClient": frame.isFromClient,
+        "time": frame.time.toIso8601String(),
+      },
+      "request": {
+        "method": request.method.name,
+        "url": request.requestUrl,
+        "httpVersion": request.protocolVersion,
+        "cookies": [],
+        "headers": _headers(request),
+        "queryString": _getQueryString(request),
+        "headersSize": -1,
+        "bodySize": -1,
+      },
+      "response": {
+        "status": request.response?.status.code ?? 0,
+        "statusText": request.response?.status.reasonPhrase ?? '',
+        "httpVersion": request.response?.protocolVersion ?? '',
+        "cookies": [],
+        "headers": _headers(request.response),
+        "content": {
+          "size": frame.payloadLength,
+          "mimeType": _getContentType(request.response?.headers.contentType),
+          "text": text,
+        },
+        "redirectURL": '',
+        "headersSize": -1,
+        "bodySize": frame.payloadLength,
+      },
+      "cache": {},
+      'timings': {'send': 0, 'wait': -1, 'receive': 0},
+      'serverIPAddress': request.response?.remoteHost ?? '',
+    };
+  }
+
   static Future<String> writeJson(List<HttpRequest> list, {String title = ''}) async {
     var entries = _entries(list);
     Map har = {};

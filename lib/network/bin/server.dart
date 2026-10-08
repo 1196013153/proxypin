@@ -80,6 +80,11 @@ class ProxyServer {
 
   /// 启动代理服务
   Future<Server> start() async {
+    // SSE 流式接口的远程上报监听（start 可被 stop/start 反复调用，需防重复注册）
+    if (!listeners.any((e) => e is ReportSseEventListener)) {
+      listeners.add(ReportSseEventListener());
+    }
+
     Server server = Server(configuration, listener: CombinedEventListener(listeners));
 
     List<Interceptor> interceptors = [
