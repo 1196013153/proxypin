@@ -42,7 +42,7 @@ jobs:
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 -d > app/upload.jks
             cat > key.properties <<EOF
-          storeFile=app/upload.jks
+          storeFile=upload.jks
           storePassword=$KEYSTORE_PASSWORD
           keyAlias=$KEY_ALIAS
           keyPassword=$KEY_PASSWORD
@@ -52,7 +52,7 @@ jobs:
             keytool -genkeypair -v -keystore app/ci.jks -alias proxypin -storepass proxypin123 -keypass proxypin123 \
               -dname "CN=ProxyPin CI,O=leaf,C=CN" -keyalg RSA -keysize 2048 -validity 36500
             cat > key.properties <<EOF
-          storeFile=app/ci.jks
+          storeFile=ci.jks
           storePassword=proxypin123
           keyAlias=proxypin
           keyPassword=proxypin123
