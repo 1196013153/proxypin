@@ -30,6 +30,7 @@ import 'package:proxypin/network/components/manager/script_manager.dart';
 import 'package:proxypin/network/channel/host_port.dart';
 import 'package:proxypin/network/http/http.dart';
 import 'package:proxypin/network/http/http_client.dart';
+import 'package:proxypin/storage/favorite_paths.dart';
 import 'package:proxypin/storage/favorites.dart';
 import 'package:proxypin/ui/component/utils.dart';
 import 'package:proxypin/ui/component/widgets.dart';
@@ -79,9 +80,14 @@ class _FavoritesState extends State<MobileFavorites> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
         appBar: AppBar(
-            title: Text(localizations.favorites, style: const TextStyle(fontSize: 16)),
+            title: TabBar(
+              tabs: [Tab(text: localizations.favorites), Tab(text: localizations.favoritePath)],
+              labelStyle: const TextStyle(fontSize: 14),
+            ),
             centerTitle: true,
             actions: [
               IconButton(
@@ -112,35 +118,92 @@ class _FavoritesState extends State<MobileFavorites> {
                     }
                   }),
             ]),
-        body: FutureBuilder(
-            future: FavoriteStorage.favorites,
-            builder: (BuildContext context, AsyncSnapshot<Queue<Favorite>> snapshot) {
-              if (snapshot.hasData) {
-                var favorites = snapshot.data ?? Queue();
-                if (favorites.isEmpty) {
-                  return Center(child: Text(localizations.emptyFavorite));
-                }
+        body: TabBarView(children: [
+          FutureBuilder(
+              future: FavoriteStorage.favorites,
+              builder: (BuildContext context, AsyncSnapshot<Queue<Favorite>> snapshot) {
+                if (snapshot.hasData) {
+                  var favorites = snapshot.data ?? Queue();
+                  if (favorites.isEmpty) {
+                    return Center(child: Text(localizations.emptyFavorite));
+                  }
 
+                  return ListView.separated(
+                    itemCount: favorites.length,
+                    itemBuilder: (_, index) {
+                      var favorite = favorites.elementAt(index);
+                      return _FavoriteItem(
+                        favorite,
+                        index: index,
+                        onRemove: (Favorite favorite) async {
+                          await FavoriteStorage.removeFavorite(favorite);
+                          setState(() {});
+                        },
+                        proxyServer: widget.proxyServer,
+                      );
+                    },
+                    separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.3),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              }),
+          const _FavoritePathList(),
+        ])));
+  }
+}
+
+/// 收藏路径 Tab：点击重放，右侧删除
+class _FavoritePathList extends StatefulWidget {
+  const _FavoritePathList({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _FavoritePathListState();
+}
+
+class _FavoritePathListState extends State<_FavoritePathList> {
+  AppLocalizations get localizations => AppLocalizations.of(context)!;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<int>(
+        valueListenable: FavoritePathStorage.changeNotifier,
+        builder: (context, _, __) {
+          return FutureBuilder<List<FavoritePath>>(
+              future: FavoritePathStorage.paths,
+              builder: (BuildContext context, AsyncSnapshot<List<FavoritePath>> snapshot) {
+                var paths = snapshot.data ?? const <FavoritePath>[];
+                if (paths.isEmpty) {
+                  return Center(child: Text(localizations.favoritePathEmpty));
+                }
                 return ListView.separated(
-                  itemCount: favorites.length,
+                  itemCount: paths.length,
                   itemBuilder: (_, index) {
-                    var favorite = favorites.elementAt(index);
-                    return _FavoriteItem(
-                      favorite,
-                      index: index,
-                      onRemove: (Favorite favorite) async {
-                        await FavoriteStorage.removeFavorite(favorite);
-                        setState(() {});
-                      },
-                      proxyServer: widget.proxyServer,
+                    var favoritePath = paths[index];
+                    return ListTile(
+                      dense: true,
+                      leading: Text(favoritePath.method ?? "*",
+                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                      title: Text(
+                          favoritePath.name?.isNotEmpty == true
+                              ? "${favoritePath.name} (${favoritePath.url})"
+                              : favoritePath.url,
+                          style: const TextStyle(fontSize: 13)),
+                      subtitle: Text(localizations.favoritePathReplay,
+                          style: const TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.secondary)),
+                      onTap: () => favoritePath.replay(),
+                      trailing: IconButton(
+                          icon: const Icon(Icons.delete_outline, size: 18),
+                          onPressed: () async {
+                            await FavoritePathStorage.remove(favoritePath);
+                            if (mounted) setState(() {});
+                          }),
                     );
                   },
                   separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.3),
                 );
-              } else {
-                return const SizedBox();
-              }
-            }));
+              });
+        });
   }
 }
 

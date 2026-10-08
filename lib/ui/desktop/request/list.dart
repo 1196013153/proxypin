@@ -29,6 +29,8 @@ import 'package:proxypin/ui/component/selection_action_bar.dart';
 import 'package:proxypin/ui/component/utils.dart';
 import 'package:proxypin/ui/component/widgets.dart';
 import 'package:proxypin/ui/content/panel.dart';
+import 'package:proxypin/storage/favorite_paths.dart';
+import 'package:proxypin/ui/desktop/left_menus/favorite_paths.dart';
 import 'package:proxypin/ui/desktop/request/report_servers.dart';
 import 'package:proxypin/ui/desktop/request/request.dart';
 import 'package:proxypin/ui/desktop/request/request_sequence.dart';
@@ -124,7 +126,7 @@ class DesktopRequestListState extends State<DesktopRequestListWidget> with Autom
                     toolbarHeight: 40,
                     title: SizedBox(height: 40, child: TabBar(tabs: tabs, dividerColor: Colors.transparent)),
                     automaticallyImplyLeading: false,
-                    actions: [popupMenus()],
+                    actions: [favoritePathFilter(), popupMenus()],
                   ),
                   bottomNavigationBar: Search(key: searchKey, onSearch: search),
                   body: Padding(
@@ -178,6 +180,80 @@ class DesktopRequestListState extends State<DesktopRequestListWidget> with Autom
 
   bool _isTextInputFocused() {
     return FocusManager.instance.primaryFocus?.context?.widget is EditableText;
+  }
+
+  /// 当前生效的收藏路径过滤（null = 未启用）
+  FavoritePath? activeFavoritePath;
+
+  /// 收藏路径过滤按钮：下拉选择一个收藏路径过滤请求列表
+  Widget favoritePathFilter() {
+    return ValueListenableBuilder<int>(
+        valueListenable: FavoritePathStorage.changeNotifier,
+        builder: (context, _, __) {
+          return FutureBuilder<List<FavoritePath>>(
+              future: FavoritePathStorage.paths,
+              builder: (context, snapshot) {
+                var paths = snapshot.data ?? const <FavoritePath>[];
+                var active = activeFavoritePath;
+                return PopupMenuButton<Object>(
+                    offset: const Offset(0, 32),
+                    icon: Icon(Icons.star_border_outlined,
+                        size: 20, color: active != null ? Colors.orangeAccent : null),
+                    itemBuilder: (BuildContext context) {
+                      return <PopupMenuEntry<Object>>[
+                        PopupMenuItem<Object>(
+                            value: 'all',
+                            height: 37,
+                            child: IconText(
+                                icon: const Icon(Icons.filter_alt_off_outlined, size: 16),
+                                text: localizations.favoritePathAll,
+                                textStyle: const TextStyle(fontSize: 13))),
+                        const PopupMenuDivider(),
+                        ...paths.map((e) => PopupMenuItem<Object>(
+                            value: e,
+                            height: 37,
+                            child: IconText(
+                                icon: Icon(
+                                    active == null
+                                        ? Icons.star_border_outlined
+                                        : identical(active, e)
+                                            ? Icons.star
+                                            : Icons.star_border_outlined,
+                                    size: 16,
+                                    color: Colors.orangeAccent),
+                                text: '${e.method ?? "*"} ${e.name?.isNotEmpty == true ? "${e.name} " : ""}${e.url}',
+                                textStyle: const TextStyle(fontSize: 12.5)))),
+                        const PopupMenuDivider(),
+                        PopupMenuItem<Object>(
+                            value: 'manage',
+                            height: 37,
+                            child: IconText(
+                                icon: const Icon(Icons.settings_outlined, size: 16),
+                                text: localizations.favoritePathManage,
+                                textStyle: const TextStyle(fontSize: 13))),
+                      ];
+                    },
+                    onSelected: (value) {
+                      if (value == 'all') {
+                        applyFavoritePathFilter(null);
+                      } else if (value == 'manage') {
+                        showFavoritePathManageDialog(context);
+                      } else if (value is FavoritePath) {
+                        applyFavoritePathFilter(value);
+                      }
+                    });
+              });
+        });
+  }
+
+  /// 应用/清除收藏路径过滤
+  void applyFavoritePathFilter(FavoritePath? favoritePath) {
+    setState(() {
+      activeFavoritePath = favoritePath;
+    });
+    var searchModel = searchKey.currentState?.searchModel ?? SearchModel();
+    searchModel.favoritePaths = favoritePath == null ? [] : [favoritePath];
+    search(searchModel);
   }
 
   Widget popupMenus() {

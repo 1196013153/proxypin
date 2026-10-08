@@ -30,6 +30,7 @@ import 'package:proxypin/network/http/http.dart';
 import 'package:proxypin/network/http/http_client.dart';
 import 'package:proxypin/network/util/cache.dart';
 import 'package:proxypin/storage/favorites.dart';
+import 'package:proxypin/storage/favorite_paths.dart';
 import 'package:proxypin/ui/component/multi_select_controller.dart';
 import 'package:proxypin/ui/component/multi_window.dart';
 import 'package:proxypin/ui/component/utils.dart';
@@ -274,6 +275,7 @@ class _RequestWidgetState extends State<RequestWidget> {
       _menuAction(localizations.script, _RequestMenuAction.script),
       ContextMenuItem.separator(),
       _menuAction(localizations.favorite, _RequestMenuAction.favorite),
+      _menuAction(localizations.favoritePath, _RequestMenuAction.favoritePath),
       ContextMenuItem.submenu(label: localizations.highlight, submenu: highlightMenu()),
       ContextMenuItem.separator(),
       _menuAction(localizations.select, _RequestMenuAction.select),
@@ -350,6 +352,11 @@ class _RequestWidgetState extends State<RequestWidget> {
       case _RequestMenuAction.favorite:
         FavoriteStorage.addFavorite(widget.request);
         FlutterToastr.show(localizations.operationSuccess, context, rootNavigator: true);
+        break;
+      case _RequestMenuAction.favoritePath:
+        var added = await FavoritePathStorage.add(widget.request);
+        FlutterToastr.show(added ? localizations.favoritePathAdded : localizations.favoritePathExists, context,
+            rootNavigator: true);
         break;
       case _RequestMenuAction.select:
         widget.multiSelectController.selectOnly(widget.request.requestId);
@@ -608,6 +615,7 @@ enum _RequestMenuAction {
   requestMap,
   script,
   favorite,
+  favoritePath,
   select,
   delete,
   batchRepeat,

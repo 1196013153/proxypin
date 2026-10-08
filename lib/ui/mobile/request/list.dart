@@ -21,6 +21,7 @@ import 'package:proxypin/network/channel/channel.dart';
 import 'package:proxypin/network/channel/channel_context.dart';
 import 'package:proxypin/network/http/http.dart';
 import 'package:proxypin/ui/component/multi_select_controller.dart';
+import 'package:proxypin/storage/favorite_paths.dart';
 import 'package:proxypin/ui/mobile/request/domians.dart';
 import 'package:proxypin/ui/mobile/request/request.dart';
 import 'package:proxypin/ui/mobile/request/request_sequence.dart';
@@ -85,7 +86,8 @@ class RequestListState extends State<RequestListWidget> {
         child: Scaffold(
           appBar: AppBar(
               title: TabBar(tabs: tabs, onTap: (index) => tabClickHandles[index].call()),
-              automaticallyImplyLeading: false),
+              automaticallyImplyLeading: false,
+              actions: [favoritePathFilter()]),
           body: TabBarView(
             children: [
               RequestSequence(
@@ -134,6 +136,75 @@ class RequestListState extends State<RequestListWidget> {
     container.removeWhere((element) => list.contains(element));
     domainListKey.currentState?.remove(list);
     RequestRowState.removeAutoReadByIds(list.map((request) => request.requestId));
+  }
+
+  /// 当前生效的收藏路径过滤（null = 未启用）
+  FavoritePath? activeFavoritePath;
+
+  /// 收藏路径过滤按钮：底部弹层选择一个收藏路径过滤请求列表
+  Widget favoritePathFilter() {
+    return ValueListenableBuilder<int>(
+        valueListenable: FavoritePathStorage.changeNotifier,
+        builder: (context, _, __) {
+          return FutureBuilder<List<FavoritePath>>(
+              future: FavoritePathStorage.paths,
+              builder: (context, snapshot) {
+                var paths = snapshot.data ?? const <FavoritePath>[];
+                var active = activeFavoritePath;
+                return IconButton(
+                    tooltip: localizations.favoritePath,
+                    onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (sheetContext) {
+                            return SafeArea(
+                                child: ListView(shrinkWrap: true, children: [
+                              ListTile(
+                                  leading: const Icon(Icons.filter_alt_off_outlined),
+                                  title: Text(localizations.favoritePathAll),
+                                  onTap: () {
+                                    Navigator.of(sheetContext).pop();
+                                    applyFavoritePathFilter(null);
+                                  }),
+                              const Divider(height: 1),
+                              ...paths.map((e) => ListTile(
+                                    dense: true,
+                                    leading: Icon(
+                                        identical(active, e) ? Icons.star : Icons.star_border_outlined,
+                                        color: Colors.orangeAccent),
+                                    title: Text('${e.method ?? "*"} ${e.name?.isNotEmpty == true ? "${e.name} " : ""}${e.url}',
+                                        style: const TextStyle(fontSize: 13)),
+                                    onTap: () {
+                                      Navigator.of(sheetContext).pop();
+                                      applyFavoritePathFilter(e);
+                                    },
+                                    onLongPress: () {
+                                      Navigator.of(sheetContext).pop();
+                                      e.replay();
+                                    },
+                                  )),
+                              if (paths.isEmpty)
+                                ListTile(
+                                    enabled: false,
+                                    title: Text(localizations.favoritePathEmpty,
+                                        style: const TextStyle(fontSize: 13))),
+                            ]));
+                          });
+                    },
+                    icon: Icon(Icons.star_border_outlined,
+                        color: active != null ? Colors.orangeAccent : null));
+                });
+              });
+  }
+
+  /// 应用/清除收藏路径过滤
+  void applyFavoritePathFilter(FavoritePath? favoritePath) {
+    setState(() {
+      activeFavoritePath = favoritePath;
+    });
+    var searchModel = _currentSearchModel ?? SearchModel();
+    searchModel.favoritePaths = favoritePath == null ? [] : [favoritePath];
+    search(searchModel);
   }
 
   void search(SearchModel searchModel) {

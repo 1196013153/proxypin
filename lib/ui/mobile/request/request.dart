@@ -28,6 +28,7 @@ import 'package:proxypin/network/channel/host_port.dart';
 import 'package:proxypin/network/http/http.dart';
 import 'package:proxypin/network/http/http_client.dart';
 import 'package:proxypin/network/util/cache.dart';
+import 'package:proxypin/storage/favorite_paths.dart';
 import 'package:proxypin/storage/favorites.dart';
 import 'package:proxypin/ui/component/multi_select_controller.dart';
 import 'package:proxypin/ui/component/utils.dart';
@@ -363,6 +364,25 @@ class RequestRowState extends State<RequestRow> {
                           },
                           label: localizations.editRequest,
                           icon: Icons.replay_outlined),
+                    ),
+                    //favorite path
+                    menuItem(
+                      left: itemButton(
+                          onPressed: () async {
+                            var added = await FavoritePathStorage.add(widget.request);
+                            FlutterToastr.show(
+                                added ? localizations.favoritePathAdded : localizations.favoritePathExists,
+                                availableContext);
+                            Navigator.maybePop(availableContext);
+                          },
+                          label: localizations.favoritePath,
+                          icon: Icons.star_border),
+                      right: itemButton(
+                          onPressed: () {
+                            Navigator.maybePop(availableContext);
+                          },
+                          label: localizations.close,
+                          icon: Icons.close),
                     ),
                     //script and rewrite
                     menuItem(

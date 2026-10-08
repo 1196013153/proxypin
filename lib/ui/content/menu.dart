@@ -7,6 +7,7 @@ import 'package:flutter_toastr/flutter_toastr.dart';
 import 'package:proxypin/network/bin/server.dart';
 import 'package:proxypin/network/http/http.dart';
 import 'package:proxypin/storage/favorites.dart';
+import 'package:proxypin/storage/favorite_paths.dart';
 import 'package:proxypin/ui/component/utils.dart';
 import 'package:proxypin/utils/curl.dart';
 import 'package:proxypin/utils/platform.dart';
@@ -159,6 +160,15 @@ class DetailMenuWidget extends StatelessWidget {
 
                     FavoriteStorage.addFavorite(request!);
                     FlutterToastr.show(localizations.addSuccess, context);
+                  }),
+              PopupMenuItem(
+                  child: Text(localizations.favoritePath),
+                  onTap: () async {
+                    if (request == null) return;
+
+                    var added = await FavoritePathStorage.add(request!);
+                    if (!context.mounted) return;
+                    FlutterToastr.show(added ? localizations.favoritePathAdded : localizations.favoritePathExists, context);
                   }),
               PopupMenuItem(
                   child: Text(localizations.copy),
