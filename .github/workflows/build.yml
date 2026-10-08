@@ -10,6 +10,9 @@ concurrency:
   group: build-${{ github.sha }}
   cancel-in-progress: false
 
+permissions:
+  contents: write
+
 jobs:
   build-android:
     runs-on: ubuntu-latest
@@ -73,8 +76,25 @@ jobs:
           path: build/app/outputs/**/proxypin-android-*.apk
           if-no-files-found: error
 
-      - name: Attach APK to release (tag push only)
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: build/app/outputs/**/proxypin-android-*.apk
+      - name: Read version
+        id: ver
+        run: |
+          VERSION=$(grep -m1 '^version:' pubspec.yaml | awk '{print $2}' | tr '+' '-')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      # 构建成功即发布 Release：tag 取 pubspec 版本(v<version>)，
+      # 同版本重复构建覆盖产物；上游升版本后会自动生成新 Release。
+      - name: Create or update Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          TAG="v$VERSION"
+          APK=$(find build/app/outputs -name 'proxypin-android-*.apk' | head -1)
+          NOTES="自动构建：commit ${GITHUB_SHA::7}，$(date -u '+%Y-%m-%d %H:%M UTC')"
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release upload "$TAG" "$APK" --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$TAG" "$APK" --repo "$GITHUB_REPOSITORY" \
+              --title "ProxyPin $VERSION" --notes "$NOTES"
+          fi
