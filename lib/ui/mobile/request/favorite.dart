@@ -30,6 +30,7 @@ import 'package:proxypin/network/components/manager/script_manager.dart';
 import 'package:proxypin/network/channel/host_port.dart';
 import 'package:proxypin/network/http/http.dart';
 import 'package:proxypin/network/http/http_client.dart';
+import 'package:proxypin/storage/favorite_domains.dart';
 import 'package:proxypin/storage/favorite_paths.dart';
 import 'package:proxypin/storage/favorites.dart';
 import 'package:proxypin/ui/component/utils.dart';
@@ -81,11 +82,15 @@ class _FavoritesState extends State<MobileFavorites> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
         appBar: AppBar(
             title: TabBar(
-              tabs: [Tab(text: localizations.favorites), Tab(text: localizations.favoritePath)],
+              tabs: [
+                Tab(text: localizations.favorites),
+                Tab(text: localizations.favoritePath),
+                Tab(text: localizations.favoriteDomain)
+              ],
               labelStyle: const TextStyle(fontSize: 14),
             ),
             centerTitle: true,
@@ -149,6 +154,7 @@ class _FavoritesState extends State<MobileFavorites> {
                 }
               }),
           const _FavoritePathList(),
+          const _FavoriteDomainList(),
         ])));
   }
 }
@@ -196,6 +202,56 @@ class _FavoritePathListState extends State<_FavoritePathList> {
                           icon: const Icon(Icons.delete_outline, size: 18),
                           onPressed: () async {
                             await FavoritePathStorage.remove(favoritePath);
+                            if (mounted) setState(() {});
+                          }),
+                    );
+                  },
+                  separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.3),
+                );
+              });
+        });
+  }
+}
+
+/// 收藏域名 Tab：点击复制，右侧删除
+class _FavoriteDomainList extends StatefulWidget {
+  const _FavoriteDomainList({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _FavoriteDomainListState();
+}
+
+class _FavoriteDomainListState extends State<_FavoriteDomainList> {
+  AppLocalizations get localizations => AppLocalizations.of(context)!;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<int>(
+        valueListenable: FavoriteDomainStorage.changeNotifier,
+        builder: (context, _, __) {
+          return FutureBuilder<List<String>>(
+              future: FavoriteDomainStorage.domains,
+              builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                var domains = snapshot.data ?? const <String>[];
+                if (domains.isEmpty) {
+                  return Center(child: Text(localizations.favoriteDomainEmpty));
+                }
+                return ListView.separated(
+                  itemCount: domains.length,
+                  itemBuilder: (_, index) {
+                    var domain = domains[index];
+                    return ListTile(
+                      dense: true,
+                      leading: const Icon(Icons.language, size: 20),
+                      title: Text(domain, style: const TextStyle(fontSize: 13)),
+                      onTap: () {
+                        Clipboard.setData(ClipboardData(text: domain));
+                        FlutterToastr.show(localizations.copied, context);
+                      },
+                      trailing: IconButton(
+                          icon: const Icon(Icons.delete_outline, size: 18),
+                          onPressed: () async {
+                            await FavoriteDomainStorage.remove(domain);
                             if (mounted) setState(() {});
                           }),
                     );

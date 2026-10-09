@@ -15,12 +15,14 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_toastr/flutter_toastr.dart';
 import 'package:proxypin/l10n/app_localizations.dart';
 import 'package:proxypin/network/bin/server.dart';
 import 'package:proxypin/network/channel/channel.dart';
 import 'package:proxypin/network/channel/channel_context.dart';
 import 'package:proxypin/network/http/http.dart';
 import 'package:proxypin/ui/component/multi_select_controller.dart';
+import 'package:proxypin/storage/favorite_domains.dart';
 import 'package:proxypin/storage/favorite_paths.dart';
 import 'package:proxypin/ui/mobile/request/domians.dart';
 import 'package:proxypin/ui/mobile/request/request.dart';
@@ -87,7 +89,7 @@ class RequestListState extends State<RequestListWidget> {
           appBar: AppBar(
               title: TabBar(tabs: tabs, onTap: (index) => tabClickHandles[index].call()),
               automaticallyImplyLeading: false,
-              actions: [favoritePathFilter()]),
+              actions: [favoritePathFilter(), favoriteDomainFilter()]),
           body: TabBarView(
             children: [
               RequestSequence(
@@ -204,6 +206,128 @@ class RequestListState extends State<RequestListWidget> {
     });
     var searchModel = _currentSearchModel ?? SearchModel();
     searchModel.favoritePaths = favoritePath == null ? [] : [favoritePath];
+    search(searchModel);
+  }
+
+  /// 当前生效的域名过滤（空 = 未启用）
+  List<String> activeFavoriteDomains = [];
+
+  /// 域名过滤按钮：底部弹层多选收藏域名过滤请求列表，角标显示已选数量
+  Widget favoriteDomainFilter() {
+    return ValueListenableBuilder<int>(
+        valueListenable: FavoriteDomainStorage.changeNotifier,
+        builder: (context, _, __) {
+          return FutureBuilder<List<String>>(
+              future: FavoriteDomainStorage.domains,
+              builder: (context, snapshot) {
+                var domains = snapshot.data ?? const <String>[];
+                var active = activeFavoriteDomains;
+                return Stack(clipBehavior: Clip.none, children: [
+                  IconButton(
+                      tooltip: localizations.favoriteDomainFilter,
+                      onPressed: () => showFavoriteDomainFilterSheet(domains),
+                      icon: Icon(Icons.language, color: active.isNotEmpty ? Colors.orangeAccent : null)),
+                  if (active.isNotEmpty)
+                    Positioned(
+                        right: 4,
+                        top: 4,
+                        child: Text('${active.length}',
+                            style: const TextStyle(fontSize: 10, color: Colors.orangeAccent))),
+                ]);
+              });
+        });
+  }
+
+  /// 多选收藏域名弹层：勾选后点确定生效，长按删除收藏域名
+  void showFavoriteDomainFilterSheet(List<String> domains) {
+    var selected = List<String>.from(activeFavoriteDomains);
+    showModalBottomSheet(
+        context: context,
+        builder: (sheetContext) {
+          return SafeArea(
+              child: StatefulBuilder(builder: (context, setSheetState) {
+            return Column(mainAxisSize: MainAxisSize.min, children: [
+              ListTile(
+                  leading: const Icon(Icons.filter_alt_off_outlined),
+                  title: Text(localizations.favoriteDomainAll),
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    applyFavoriteDomainFilter([]);
+                  }),
+              const Divider(height: 1),
+              Flexible(
+                child: ListView(shrinkWrap: true, children: [
+                  ...domains.map((domain) => ListTile(
+                        dense: true,
+                        leading: Checkbox(
+                            value: selected.contains(domain),
+                            onChanged: (checked) => setSheetState(() {
+                                  checked == true ? selected.add(domain) : selected.remove(domain);
+                                })),
+                        title: Text(domain, style: const TextStyle(fontSize: 13)),
+                        onTap: () => setSheetState(() {
+                              selected.contains(domain) ? selected.remove(domain) : selected.add(domain);
+                            }),
+                        onLongPress: () {
+                          Navigator.of(sheetContext).pop();
+                          deleteFavoriteDomain(domain);
+                        },
+                      )),
+                  if (domains.isEmpty)
+                    ListTile(
+                        enabled: false,
+                        title: Text(localizations.favoriteDomainEmpty, style: const TextStyle(fontSize: 13))),
+                ]),
+              ),
+              const Divider(height: 1),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                TextButton.icon(
+                    onPressed: () => setSheetState(() => selected.clear()),
+                    icon: const Icon(Icons.clear_all, size: 18),
+                    label: Text(localizations.favoriteDomainClear)),
+                TextButton.icon(
+                    onPressed: () {
+                      Navigator.of(sheetContext).pop();
+                      applyFavoriteDomainFilter(selected);
+                    },
+                    icon: const Icon(Icons.check, size: 18),
+                    label: Text(localizations.confirm)),
+              ]),
+            ]);
+          }));
+        });
+  }
+
+  /// 长按删除收藏域名，若删除的是生效中的过滤项则同步刷新列表
+  Future<void> deleteFavoriteDomain(String domain) async {
+    var confirmed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: Text(localizations.delete),
+            content: Text(localizations.favoriteDomainDeleteConfirm),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: Text(localizations.cancel)),
+              TextButton(onPressed: () => Navigator.pop(dialogContext, true), child: Text(localizations.confirm)),
+            ],
+          );
+        });
+    if (confirmed != true) {
+      return;
+    }
+    await FavoriteDomainStorage.remove(domain);
+    var remaining = activeFavoriteDomains.where((e) => e != FavoriteDomainStorage.normalize(domain)).toList();
+    applyFavoriteDomainFilter(remaining);
+    if (mounted) FlutterToastr.show(localizations.deleteSuccess, context);
+  }
+
+  /// 应用/清除域名过滤
+  void applyFavoriteDomainFilter(List<String> domains) {
+    setState(() {
+      activeFavoriteDomains = List.of(domains);
+    });
+    var searchModel = _currentSearchModel ?? SearchModel();
+    searchModel.favoriteDomains = activeFavoriteDomains;
     search(searchModel);
   }
 

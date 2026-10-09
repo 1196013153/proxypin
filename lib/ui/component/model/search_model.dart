@@ -16,6 +16,7 @@
 import 'package:get/get.dart';
 import 'package:proxypin/network/http/content_type.dart';
 import 'package:proxypin/network/http/http.dart';
+import 'package:proxypin/storage/favorite_domains.dart';
 import 'package:proxypin/storage/favorite_paths.dart';
 
 /// @author wanghongen
@@ -55,6 +56,9 @@ class SearchModel {
   // 收藏接口路径过滤：非空时仅保留命中任一收藏路径的请求
   List<FavoritePath> favoritePaths = [];
 
+  // 收藏域名过滤：非空时仅保留 host 命中任一所选域名的请求（统一小写比较）
+  List<String> favoriteDomains = [];
+
   SearchModel([this.keyword]);
 
   bool get isNotEmpty {
@@ -67,7 +71,8 @@ class SearchModel {
         durationFromMs != null ||
         durationToMs != null ||
         protocols.isNotEmpty ||
-        favoritePaths.isNotEmpty;
+        favoritePaths.isNotEmpty ||
+        favoriteDomains.isNotEmpty;
   }
 
   bool get isEmpty {
@@ -87,6 +92,7 @@ class SearchModel {
     searchModel.durationToMs = durationToMs;
     searchModel.protocols = Set.from(protocols);
     searchModel.favoritePaths = List.of(favoritePaths);
+    searchModel.favoriteDomains = List.of(favoriteDomains);
     searchModel.caseSensitive = RxBool(caseSensitive.value);
     searchModel.isRegExp = RxBool(isRegExp.value);
     return searchModel;
@@ -133,6 +139,10 @@ class SearchModel {
     }
     // 收藏路径过滤：命中任一收藏路径即通过
     if (favoritePaths.isNotEmpty && !favoritePaths.any((e) => e.matches(request))) {
+      return false;
+    }
+    // 收藏域名过滤：host 命中任一所选域名即通过（统一小写比较）
+    if (favoriteDomains.isNotEmpty && !favoriteDomains.contains(FavoriteDomainStorage.hostOf(request))) {
       return false;
     }
     if (requestContentType != null && request.contentType != requestContentType) {
