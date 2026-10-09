@@ -324,13 +324,13 @@ class Har {
     if (request.contentType == ContentType.formData || request.contentType == ContentType.formUrl) {
       return {
         "mimeType": request.headers.contentType, // 请求体类型
-        if (request.body != null) "text": String.fromCharCodes(request.body!), // 请求体内容
+        if (request.body != null) "text": utf8.decode(request.body!, allowMalformed: true), // 请求体内容(UTF-8 解码,避免中文乱码)
         "params": [], // 请求体内容
       };
     }
     return {
       "mimeType": request.headers.contentType, // 请求体类型
-      if (request.body != null) "text": String.fromCharCodes(request.body!), // 请求体内容
+      if (request.body != null) "text": utf8.decode(request.body!, allowMalformed: true), // 请求体内容(UTF-8 解码,避免中文乱码)
     };
   }
 
