@@ -48,8 +48,9 @@ jobs:
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 -d > app/upload.jks
             KEYSTORE_FILE=upload.jks
-            KEY_ALIAS="$KEY_ALIAS"
-            STORE_PASSWORD="$KEYSTORE_PASSWORD"
+            KEY_ALIAS="${KEY_ALIAS:-proxypin}"
+            STORE_PASSWORD="${KEYSTORE_PASSWORD:?设置了 ANDROID_KEYSTORE_BASE64 就必须同时设置 ANDROID_KEYSTORE_PASSWORD}"
+            KEY_PASSWORD="${KEY_PASSWORD:-$STORE_PASSWORD}"
             echo "mode=fixed" >> "$GITHUB_OUTPUT"
           else
             echo "::warning::未配置 ANDROID_KEYSTORE_BASE64 等签名 Secrets，本次使用一次性 CI keystore：签名与历史版本不一致，且不会发布 Release。请在 Settings → Secrets and variables → Actions 配置固定签名。"
