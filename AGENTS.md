@@ -47,3 +47,9 @@
 - Those secrets are write-only. Before any `gh secret set`, check `GET /repos/{owner}/{repo}/actions/secrets` (`created_at`) — replacing the keystore changes the app signature and forces every installed user to uninstall once; the old private key cannot be recovered.
 - Any workflow that reuses `build.yml` via `uses:` must pass `secrets: inherit` (see `.github/workflows/upstream-sync.yml`). Without it the called workflow sees empty secrets, falls back to a throwaway keystore, and — by design — skips the Release publish instead of overwriting it.
 - To check which identity a build used: read the run's job summary (`Show signing certificate` → `SHA256`), or parse the v2 signing block certificate of the produced APK.
+
+## Release Versioning + In-App Update
+- Releases are tagged `v<version>-<build>` from pubspec (`version: 1.3.3+41` → tag `v1.3.3-41`); a build for an already-tagged version clobbers that tag's APK instead of creating a new release.
+- Bump the `+N` build number in `pubspec.yaml` to ship a new release that installed users can be offered: `versionCode` comes from that number, and same-`versionName` builds are only distinguished by it.
+- The in-app updater reads **this fork's** releases (`lib/ui/app_update/constants.dart` → `1196013153/proxypin`, not upstream) and compares `versionName` first, then the build number, which CI injects with `--dart-define=PROXYPIN_BUILD_NUMBER` (read by `Constants.buildNumber`; 0 in local builds, so local builds never get prompted). Removing that dart-define silently disables update prompts between builds that share a `versionName`.
+- The "ignore this release" flag stores the release tag (`releaseTag`), not the version string, so ignoring one build does not suppress the next one.

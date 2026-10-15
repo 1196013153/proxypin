@@ -64,7 +64,12 @@ class NewVersionDialog extends StatelessWidget {
                 TextSpan(
                   children: [
                     TextSpan(text: "${localizations.appUpdateNewVersionLbl}: ", style: theme.textTheme.bodySmall),
-                    TextSpan(text: newVersion.version, style: theme.textTheme.labelMedium),
+                    // 同名不同构建号也显示出来(如 1.3.3(41))，便于区分
+                    TextSpan(
+                        text: newVersion.buildNumber.isEmpty
+                            ? newVersion.version
+                            : "${newVersion.version}(${newVersion.buildNumber})",
+                        style: theme.textTheme.labelMedium),
                   ],
                 ),
               ),
@@ -76,8 +81,9 @@ class NewVersionDialog extends StatelessWidget {
           if (canIgnore)
             TextButton(
               onPressed: () async {
-                SharedPreferencesAsync().setString(Constants.ignoreReleaseVersionKey, newVersion.version);
-                logger.i("ignored release [${newVersion.version}]");
+                // 忽略键用 releaseTag，避免忽略 40 之后再也收不到 41 的提示
+                SharedPreferencesAsync().setString(Constants.ignoreReleaseVersionKey, newVersion.releaseTag);
+                logger.i("ignored release [${newVersion.releaseTag}]");
                 if (context.mounted) Navigator.pop(context);
               },
               child: Text(localizations.appUpdateIgnoreBtnTxt),

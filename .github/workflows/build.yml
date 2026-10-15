@@ -89,8 +89,20 @@ jobs:
         run: flutter test
         continue-on-error: true
 
+      - name: Read version
+        id: ver
+        run: |
+          VERSION_LINE=$(grep -m1 '^version:' pubspec.yaml | awk '{print $2}')
+          VERSION=$(echo "$VERSION_LINE" | tr '+' '-')
+          # 构建号(versionCode) = pubspec 里 version 的 +N 部分
+          BUILD=$(echo "$VERSION_LINE" | sed -n 's/.*+\([0-9]\{1,\}\)$/\1/p')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "build=${BUILD:-0}" >> "$GITHUB_OUTPUT"
+          echo "构建版本: $VERSION (build ${BUILD:-0})"
+
+      # 注入构建号：App 内「检查更新」在 versionName 相同时会比较构建号，缺了它同名版本不会提示更新
       - name: Build release APK
-        run: flutter build apk --release
+        run: flutter build apk --release --dart-define=PROXYPIN_BUILD_NUMBER=${{ steps.ver.outputs.build }}
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -98,12 +110,6 @@ jobs:
           name: proxypin-android-apk
           path: build/app/outputs/**/proxypin-android-*.apk
           if-no-files-found: error
-
-      - name: Read version
-        id: ver
-        run: |
-          VERSION=$(grep -m1 '^version:' pubspec.yaml | awk '{print $2}' | tr '+' '-')
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       # 构建成功即发布 Release：tag 取 pubspec 版本(v<version>)，
       # 同版本重复构建覆盖产物；上游升版本后会自动生成新 Release。

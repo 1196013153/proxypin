@@ -49,6 +49,9 @@ class RemoteVersionEntity {
     this.assets = const [],
   });
 
+  /// 构建号(versionCode)：tag 未带构建号(如上游 v1.3.3)或不可解析时按 0 处理
+  int get buildNumberInt => int.tryParse(buildNumber) ?? 0;
+
   /// 选择当前桌面平台最合适的可下载资产。
   /// macOS: 优先 mac/macos/darwin/osx 的 .zip, 否则 .dmg。
   /// Windows: 均优先 .zip 原地更新; 非 Win7 没有 zip 时回退到 setup.exe。
@@ -103,7 +106,8 @@ abstract class GithubReleaseParser {
     // 去掉版本前缀, 兼容 v / V 两种写法(如 v1.3.3、V1.3.3)
     final tagWithoutPrefix =
         fullTag.startsWith(RegExp('[vV]')) ? fullTag.substring(1) : fullTag;
-    final fullVersion = tagWithoutPrefix.split("-").first.split("+");
+    // 版本与构建号的分隔符: 兼容上游 v1.3.3 与本仓库 v1.3.3-40 / v1.3.3+40
+    final fullVersion = tagWithoutPrefix.split(RegExp(r'[+\-]'));
     var version = fullVersion.first;
     var buildNumber = fullVersion.elementAtOrElse(1, (index) => "");
 

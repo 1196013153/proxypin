@@ -26,12 +26,19 @@ class AppUpdateRepository {
 
       if (!context.mounted) return;
 
-      var availableUpdates = compareVersions(AppConfiguration.version, lastVersion.version);
+      // 先比 versionName；versionName 相同时再比构建号(如 v1.3.3-40 -> v1.3.3-41)
+      var availableUpdates = compareVersions(
+        AppConfiguration.version,
+        lastVersion.version,
+        currentBuild: Constants.buildNumber,
+        latestBuild: lastVersion.buildNumberInt,
+      );
       if (availableUpdates) {
         if (canIgnore) {
           var ignoreVersion = await SharedPreferencesAsync().getString(Constants.ignoreReleaseVersionKey);
-          if (ignoreVersion == lastVersion.version) {
-            logger.d("ignored release [${lastVersion.version}]");
+          // 用 releaseTag 作为忽略键：同名不同构建号(40/41)不会被互相忽略
+          if (ignoreVersion == lastVersion.releaseTag) {
+            logger.d("ignored release [${lastVersion.releaseTag}]");
             return;
           }
         }
@@ -89,7 +96,8 @@ class AppUpdateRepository {
     return latest;
   }
 
-  static bool compareVersions(String currentVersion, String latestVersion) {
+  static bool compareVersions(String currentVersion, String latestVersion,
+      {int currentBuild = 0, int latestBuild = 0}) {
     String normalizeVersion(String version) {
       // 去掉版本前缀, 兼容 v / V 两种写法(如 v1.3.3、V1.3.3)
       if (version.isNotEmpty && (version[0] == 'v' || version[0] == 'V')) {
@@ -115,6 +123,12 @@ class AppUpdateRepository {
       } else if (current[i] < latest[i]) {
         return true; // 需要更新
       }
+    }
+
+    // versionName 相同：再比构建号（如 v1.3.3-40 -> v1.3.3-41）；
+    // currentBuild 为 0 表示本机构建号未知(本地开发构建)，此时保持旧行为不提示
+    if (currentBuild > 0 && latestBuild > currentBuild) {
+      return true;
     }
 
     return latest.length > current.length; // 最新版本有更多的子版本号
