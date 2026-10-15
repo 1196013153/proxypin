@@ -79,3 +79,6 @@ jobs:
     needs: sync
     if: needs.sync.outputs.merged == 'true'
     uses: ./.github/workflows/build.yml
+    # 复用工作流默认拿不到调用方的 Secrets，必须显式 inherit，
+    # 否则 build.yml 里 ANDROID_KEYSTORE_* 为空 → 退回一次性 keystore → 签名不一致。
+    secrets: inherit
