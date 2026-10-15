@@ -34,7 +34,10 @@ jobs:
           flutter pub get
           flutter gen-l10n
 
+      # 固定签名：优先使用 Secrets 里的正式 keystore（4 个 Secret 见交付说明）。
+      # 未配置时退回一次性 keystore（签名每次都不一样），此时不发布 Release，只保留 workflow 产物。
       - name: Prepare signing
+        id: signing
         env:
           KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -44,23 +47,42 @@ jobs:
           cd android
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 -d > app/upload.jks
-            cat > key.properties <<EOF
-          storeFile=upload.jks
-          storePassword=$KEYSTORE_PASSWORD
+            KEYSTORE_FILE=upload.jks
+            KEY_ALIAS="$KEY_ALIAS"
+            STORE_PASSWORD="$KEYSTORE_PASSWORD"
+            echo "mode=fixed" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::未配置 ANDROID_KEYSTORE_BASE64 等签名 Secrets，本次使用一次性 CI keystore：签名与历史版本不一致，且不会发布 Release。请在 Settings → Secrets and variables → Actions 配置固定签名。"
+            keytool -genkeypair -v -keystore app/ci.jks -alias proxypin -storepass proxypin123 -keypass proxypin123 \
+              -dname "CN=ProxyPin CI,O=leaf,C=CN" -keyalg RSA -keysize 2048 -validity 36500
+            KEYSTORE_FILE=ci.jks
+            KEY_ALIAS=proxypin
+            STORE_PASSWORD=proxypin123
+            KEY_PASSWORD=proxypin123
+            echo "mode=ephemeral" >> "$GITHUB_OUTPUT"
+          fi
+          cat > key.properties <<EOF
+          storeFile=$KEYSTORE_FILE
+          storePassword=$STORE_PASSWORD
           keyAlias=$KEY_ALIAS
           keyPassword=$KEY_PASSWORD
           EOF
-          else
-            echo "::warning::No signing secrets configured, generating an ephemeral CI keystore"
-            keytool -genkeypair -v -keystore app/ci.jks -alias proxypin -storepass proxypin123 -keypass proxypin123 \
-              -dname "CN=ProxyPin CI,O=leaf,C=CN" -keyalg RSA -keysize 2048 -validity 36500
-            cat > key.properties <<EOF
-          storeFile=ci.jks
-          storePassword=proxypin123
-          keyAlias=proxypin
-          keyPassword=proxypin123
-          EOF
-          fi
+
+      # 打印签名证书指纹，方便确认每次构建用的是同一把密钥
+      - name: Show signing certificate
+        run: |
+          cd android
+          KEYSTORE_PASSWORD='${{ secrets.ANDROID_KEYSTORE_PASSWORD }}'
+          STORE_FILE=app/$(grep -m1 '^storeFile=' key.properties | cut -d= -f2)
+          KEY_ALIAS=$(grep -m1 '^keyAlias=' key.properties | cut -d= -f2)
+          STORE_PASSWORD="${KEYSTORE_PASSWORD:-proxypin123}"
+          {
+            echo "### Signing certificate"
+            echo '```'
+            keytool -list -v -keystore "$STORE_FILE" -storepass "$STORE_PASSWORD" -alias "$KEY_ALIAS" \
+              | grep -E "Owner:|Valid from:|SHA256:"
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Run tests
         run: flutter test
@@ -84,17 +106,24 @@ jobs:
 
       # 构建成功即发布 Release：tag 取 pubspec 版本(v<version>)，
       # 同版本重复构建覆盖产物；上游升版本后会自动生成新 Release。
+      # 仅在固定签名（Secrets 已配置）时发布，避免把签名不一致的包发出去。
       - name: Create or update Release
+        if: steps.signing.outputs.mode == 'fixed'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.ver.outputs.version }}
         run: |
           TAG="v$VERSION"
           APK=$(find build/app/outputs -name 'proxypin-android-*.apk' | head -1)
-          NOTES="自动构建：commit ${GITHUB_SHA::7}，$(date -u '+%Y-%m-%d %H:%M UTC')"
+          NOTES="自动构建：commit ${GITHUB_SHA::7}，$(date -u '+%Y-%m-%d %H:%M UTC')，固定签名"
           if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
             gh release upload "$TAG" "$APK" --clobber --repo "$GITHUB_REPOSITORY"
           else
             gh release create "$TAG" "$APK" --repo "$GITHUB_REPOSITORY" \
               --title "ProxyPin $VERSION" --notes "$NOTES"
           fi
+
+      - name: Skip Release (ephemeral keystore)
+        if: steps.signing.outputs.mode != 'fixed'
+        run: |
+          echo "::warning::本次未使用固定签名，已跳过 Release 发布。配置 ANDROID_KEYSTORE_BASE64 / ANDROID_KEYSTORE_PASSWORD / ANDROID_KEY_ALIAS / ANDROID_KEY_PASSWORD 四个 Secret 后即可恢复自动发布。"
