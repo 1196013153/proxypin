@@ -42,3 +42,8 @@
 - Keep desktop/mobile parity: shared proxy logic in `lib/network/**`, UI-specific behavior in `lib/ui/desktop/**` or `lib/ui/mobile/**` only.
 - Ignore generated/build artifacts (`build/`, platform build outputs) unless the task explicitly targets packaging.
 
+## Release Signing (Android, CI)
+- Release APKs are signed with one fixed keystore kept in repo secrets `ANDROID_KEYSTORE_BASE64` / `ANDROID_KEYSTORE_PASSWORD` / `ANDROID_KEY_ALIAS` / `ANDROID_KEY_PASSWORD`, read by `Prepare signing` in `.github/workflows/build.yml`. All builds then share one certificate fingerprint, so installed apps upgrade in place.
+- Those secrets are write-only. Before any `gh secret set`, check `GET /repos/{owner}/{repo}/actions/secrets` (`created_at`) — replacing the keystore changes the app signature and forces every installed user to uninstall once; the old private key cannot be recovered.
+- Any workflow that reuses `build.yml` via `uses:` must pass `secrets: inherit` (see `.github/workflows/upstream-sync.yml`). Without it the called workflow sees empty secrets, falls back to a throwaway keystore, and — by design — skips the Release publish instead of overwriting it.
+- To check which identity a build used: read the run's job summary (`Show signing certificate` → `SHA256`), or parse the v2 signing block certificate of the produced APK.
