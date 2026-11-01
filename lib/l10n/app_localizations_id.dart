@@ -21,6 +21,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get requests => 'Tangkap';
 
   @override
+  String get navRequests => 'Permintaan';
+
+  @override
   String get favorites => 'Favorit';
 
   @override
@@ -31,6 +34,9 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get preference => 'Preferensi';
+
+  @override
+  String get preferenceShort => 'Preferences';
 
   @override
   String get feedback => 'Umpan balik';
@@ -61,9 +67,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get password => 'Kata sandi';
-
-  @override
-  String get proxySetting => 'Proxy Setting';
 
   @override
   String get setAs => 'Tetapkan sebagai ';
@@ -274,6 +277,24 @@ class AppLocalizationsId extends AppLocalizations {
   String get requestMethod => 'Metode permintaan';
 
   @override
+  String get protocol => 'Protocol';
+
+  @override
+  String get size => 'Size';
+
+  @override
+  String get remoteAddress => 'Remote Address';
+
+  @override
+  String get requestTime => 'Request Time';
+
+  @override
+  String get app => 'App';
+
+  @override
+  String get requestUrl => 'Request URL';
+
+  @override
   String get param => 'Parameter';
 
   @override
@@ -337,9 +358,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get replace => 'Ganti';
-
-  @override
-  String get clickEdit => 'Click Edit';
 
   @override
   String get refresh => 'Muat ulang';
@@ -573,6 +591,65 @@ class AppLocalizationsId extends AppLocalizations {
   String get deleteFavoriteSuccess => 'Favorit dihapus';
 
   @override
+  String get favoritePath => 'Favorite Path';
+
+  @override
+  String get configBackup => 'Config Backup';
+
+  @override
+  String get configBackupExport => 'Export Config';
+
+  @override
+  String get configBackupImport => 'Import Config';
+
+  @override
+  String configBackupRestartHint(int count) {
+    return 'Imported $count files. Restart the app to fully apply.';
+  }
+
+  @override
+  String get favoritePathAdded => 'Path favorited';
+
+  @override
+  String get favoritePathExists => 'Path already favorited';
+
+  @override
+  String get favoritePathManage => 'Manage Favorite Paths';
+
+  @override
+  String get favoritePathAll => 'All Requests';
+
+  @override
+  String get favoritePathReplay => 'Replay';
+
+  @override
+  String get favoritePathEmpty => 'No favorite paths';
+
+  @override
+  String get favoriteDomain => 'Favorite Domain';
+
+  @override
+  String get favoriteDomainAdded => 'Domain favorited';
+
+  @override
+  String get favoriteDomainExists => 'Domain already favorited';
+
+  @override
+  String get favoriteDomainFilter => 'Domain Filter';
+
+  @override
+  String get favoriteDomainAll => 'All Requests';
+
+  @override
+  String get favoriteDomainClear => 'Clear Selection';
+
+  @override
+  String get favoriteDomainEmpty => 'No favorite domains';
+
+  @override
+  String get favoriteDomainDeleteConfirm => 'Do you want to delete this favorite domain?';
+
+  @override
   String get historyRecord => 'Riwayat';
 
   @override
@@ -616,6 +693,18 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get requestBody => 'Body permintaan';
+
+  @override
+  String get queryParams => 'Query Params';
+
+  @override
+  String get path => 'Path';
+
+  @override
+  String get requestCookies => 'Request Cookies';
+
+  @override
+  String get responseCookies => 'Response Cookies';
 
   @override
   String get responseBody => 'Body respons';
@@ -677,9 +766,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get trustCa => 'Percayai sertifikat';
-
-  @override
-  String get profileDownload => 'Profile Download';
 
   @override
   String get exportCA => 'Ekspor sertifikat root';
@@ -789,9 +875,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get connect => 'Connect';
 
   @override
-  String get reconnect => 'Reconnect';
-
-  @override
   String remoteConnected(Object os) {
     return 'Connected $os, traffic will be forwarded to $os';
   }
@@ -801,9 +884,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get connectSuccess => 'Koneksi berhasil';
-
-  @override
-  String get connectedRemote => 'Connected to remote';
 
   @override
   String get connected => 'Tersambung';
@@ -933,13 +1013,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get material3 => 'Material 3';
 
   @override
-  String get iosVpnBackgroundAudio =>
-      'After turning on packet capture, exit to the background. In order to maintain the main UI thread for network communication, a silent audio playback will be enabled to keep the main thread running. Otherwise, it will only run in the background for 30 seconds. Do you agree to play audio in the background after turning on packet capture?';
-
-  @override
-  String get markRead => 'Mark as read';
-
-  @override
   String get autoRead => 'Auto read';
 
   @override
@@ -976,6 +1049,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get certHashName => 'CA Hash Name';
 
   @override
+  String get certHashShort => 'CA Hash';
+
+  @override
   String get regExp => 'RegExp';
 
   @override
@@ -983,12 +1059,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get qrCode => 'QR Code';
-
-  @override
-  String get jsonViewer => 'JSON Viewer';
-
-  @override
-  String get xmlViewer => 'XML Viewer';
 
   @override
   String get textDiff => 'Text Diff';
@@ -1257,9 +1327,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get mcpPort => 'Port';
 
   @override
-  String get mcpAdvanced => 'Advanced settings';
-
-  @override
   String get mcpConfig => 'MCP Configuration';
 
   @override
@@ -1282,18 +1349,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get mcpLearnMore => 'Learn more about MCP';
-
-  @override
-  String get mcpSkills => 'Skills';
-
-  @override
-  String get mcpSkillsTitle => 'MCP Skills';
-
-  @override
-  String get mcpSkillsReadonly => 'Read-only traffic tools';
-
-  @override
-  String get mcpSkillsRules => 'Rules, replay & environment tools';
 
   @override
   String get mcpEndpoint => 'MCP Endpoint';
@@ -1336,27 +1391,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get statusStopped => 'Stopped';
 
   @override
-  String get mcpClientLabel => 'AI client';
-
-  @override
-  String get mcpTransportLabel => 'Transport';
-
-  @override
-  String get mcpCommandLabel => 'Connect command';
-
-  @override
-  String get mcpClientsIntl => 'International';
-
-  @override
-  String get mcpClientsDomestic => 'Chinese';
-
-  @override
-  String get mcpTransportStdio => 'stdio';
-
-  @override
-  String get mcpTransportHttp => 'HTTP';
-
-  @override
   String get mcpHintTerminal => 'Copy and run in your terminal.';
 
   @override
@@ -1379,9 +1413,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get mcpStartChat => 'Start chat';
-
-  @override
-  String get mcpOpenTerminal => 'Run in terminal';
 
   @override
   String get mcpSetupDone => 'Configured. Restart your AI client to apply.';
@@ -1407,10 +1438,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get mcpStartFailed => 'MCP service failed to start';
 
   @override
-  String get mcpPrivacyHint =>
-      'Only listens on 127.0.0.1 (this machine). Data leaves the app only when an AI client explicitly requests it via a tool.';
-
-  @override
   String get replayTasks => 'Tugas Pengulangan';
 
   @override
@@ -1430,4 +1457,78 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get resume => 'Lanjutkan';
+
+  @override
+  String get overview => 'Ringkasan';
+
+  @override
+  String get network => 'Network';
+
+  @override
+  String get trafficControl => 'Traffic Control';
+
+  @override
+  String get rulesPageHint => 'Click a row to open its window';
+
+  @override
+  String get notEnabled => 'Not enabled';
+
+  @override
+  String statusEnabledRules(int count) {
+    return 'Enabled · $count rules';
+  }
+
+  @override
+  String statusEnabledScripts(int count) {
+    return 'Enabled · $count scripts';
+  }
+
+  @override
+  String rulesCount(int count) {
+    return '$count rules';
+  }
+
+  @override
+  String scriptsCount(int count) {
+    return '$count scripts';
+  }
+
+  @override
+  String get requestBlockDesc => 'Block matching requests, disconnect or return an error';
+
+  @override
+  String get requestRewriteDesc => 'Rewrite request/response line, headers and body by rule';
+
+  @override
+  String get requestMapDesc => 'Map requests to a local file or a remote URL';
+
+  @override
+  String get requestCryptoDesc => 'Encrypt or decrypt request and response bodies';
+
+  @override
+  String get scriptDesc => 'Handle requests and responses with JavaScript';
+
+  @override
+  String get breakpointDesc => 'Intercept requests/responses, modify, then resume';
+
+  @override
+  String get allFunctions => 'All functions';
+
+  @override
+  String get customizeToolbar => 'Customize toolbar';
+
+  @override
+  String get restoreDefaults => 'Restore defaults';
+
+  @override
+  String get pinnedDragSort => 'Pinned (drag to reorder)';
+
+  @override
+  String get pinToolsHint => 'All tools (tap + to pin to toolbar)';
+
+  @override
+  String get image => 'Image';
+
+  @override
+  String get filtered => 'Filtered';
 }

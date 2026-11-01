@@ -187,6 +187,7 @@
   "requestRewriteRule": "Aturan penulisan ulang",
   "requestRewriteDeleteConfirm": "Hapus {size} aturan?",
   "requests": "Tangkap",
+  "navRequests": "Permintaan",
   "reset": "Atur ulang",
   "resetDefaultCA": "Reset sertifikat root default",
   "resetDefaultCADescribe": "Yakin ingin mereset sertifikat root default?",
@@ -270,5 +271,6 @@
   "statusCancelled": "Dibatalkan",
   "statusPaused": "Dijeda",
   "pause": "Jeda",
-  "resume": "Lanjutkan"
+  "resume": "Lanjutkan",
+  "overview": "Ringkasan"
 }

@@ -109,7 +109,7 @@ abstract class AppLocalizations {
   /// No description provided for @breakpoint.
   ///
   /// In en, this message translates to:
-  /// **'Breakpoint'**
+  /// **'Breakpoints'**
   String get breakpoint;
 
   /// No description provided for @breakpointRule.
@@ -129,6 +129,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Requests'**
   String get requests;
+
+  /// No description provided for @navRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests'**
+  String get navRequests;
 
   /// No description provided for @favorites.
   ///
@@ -154,6 +160,12 @@ abstract class AppLocalizations {
   /// **'Preferences'**
   String get preference;
 
+  /// No description provided for @preferenceShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferenceShort;
+
   /// No description provided for @feedback.
   ///
   /// In en, this message translates to:
@@ -175,7 +187,7 @@ abstract class AppLocalizations {
   /// No description provided for @script.
   ///
   /// In en, this message translates to:
-  /// **'Script'**
+  /// **'Scripts'**
   String get script;
 
   /// No description provided for @share.
@@ -214,12 +226,6 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get password;
 
-  /// No description provided for @proxySetting.
-  ///
-  /// In en, this message translates to:
-  /// **'Proxy Setting'**
-  String get proxySetting;
-
   /// No description provided for @setAs.
   ///
   /// In en, this message translates to:
@@ -253,7 +259,7 @@ abstract class AppLocalizations {
   /// No description provided for @config.
   ///
   /// In en, this message translates to:
-  /// **'Configuration'**
+  /// **'Config'**
   String get config;
 
   /// No description provided for @version.
@@ -634,6 +640,42 @@ abstract class AppLocalizations {
   /// **'Request Method'**
   String get requestMethod;
 
+  /// No description provided for @protocol.
+  ///
+  /// In en, this message translates to:
+  /// **'Protocol'**
+  String get protocol;
+
+  /// No description provided for @size.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get size;
+
+  /// No description provided for @remoteAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote Address'**
+  String get remoteAddress;
+
+  /// No description provided for @requestTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Time'**
+  String get requestTime;
+
+  /// No description provided for @app.
+  ///
+  /// In en, this message translates to:
+  /// **'App'**
+  String get app;
+
+  /// No description provided for @requestUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Request URL'**
+  String get requestUrl;
+
   /// No description provided for @param.
   ///
   /// In en, this message translates to:
@@ -759,12 +801,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Replace'**
   String get replace;
-
-  /// No description provided for @clickEdit.
-  ///
-  /// In en, this message translates to:
-  /// **'Click Edit'**
-  String get clickEdit;
 
   /// No description provided for @refresh.
   ///
@@ -1222,6 +1258,120 @@ abstract class AppLocalizations {
   /// **'Favorite deleted'**
   String get deleteFavoriteSuccess;
 
+  /// No description provided for @favoritePath.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite Path'**
+  String get favoritePath;
+
+  /// No description provided for @configBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Config Backup'**
+  String get configBackup;
+
+  /// No description provided for @configBackupExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Config'**
+  String get configBackupExport;
+
+  /// No description provided for @configBackupImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Config'**
+  String get configBackupImport;
+
+  /// No description provided for @configBackupRestartHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported {count} files. Restart the app to fully apply.'**
+  String configBackupRestartHint(int count);
+
+  /// No description provided for @favoritePathAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Path favorited'**
+  String get favoritePathAdded;
+
+  /// No description provided for @favoritePathExists.
+  ///
+  /// In en, this message translates to:
+  /// **'Path already favorited'**
+  String get favoritePathExists;
+
+  /// No description provided for @favoritePathManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Favorite Paths'**
+  String get favoritePathManage;
+
+  /// No description provided for @favoritePathAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All Requests'**
+  String get favoritePathAll;
+
+  /// No description provided for @favoritePathReplay.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay'**
+  String get favoritePathReplay;
+
+  /// No description provided for @favoritePathEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No favorite paths'**
+  String get favoritePathEmpty;
+
+  /// No description provided for @favoriteDomain.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite Domain'**
+  String get favoriteDomain;
+
+  /// No description provided for @favoriteDomainAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain favorited'**
+  String get favoriteDomainAdded;
+
+  /// No description provided for @favoriteDomainExists.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain already favorited'**
+  String get favoriteDomainExists;
+
+  /// No description provided for @favoriteDomainFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain Filter'**
+  String get favoriteDomainFilter;
+
+  /// No description provided for @favoriteDomainAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All Requests'**
+  String get favoriteDomainAll;
+
+  /// No description provided for @favoriteDomainClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Selection'**
+  String get favoriteDomainClear;
+
+  /// No description provided for @favoriteDomainEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No favorite domains'**
+  String get favoriteDomainEmpty;
+
+  /// No description provided for @favoriteDomainDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete this favorite domain?'**
+  String get favoriteDomainDeleteConfirm;
+
   /// No description provided for @historyRecord.
   ///
   /// In en, this message translates to:
@@ -1299,6 +1449,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Request Body'**
   String get requestBody;
+
+  /// No description provided for @queryParams.
+  ///
+  /// In en, this message translates to:
+  /// **'Query Params'**
+  String get queryParams;
+
+  /// No description provided for @path.
+  ///
+  /// In en, this message translates to:
+  /// **'Path'**
+  String get path;
+
+  /// No description provided for @requestCookies.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Cookies'**
+  String get requestCookies;
+
+  /// No description provided for @responseCookies.
+  ///
+  /// In en, this message translates to:
+  /// **'Response Cookies'**
+  String get responseCookies;
 
   /// No description provided for @responseBody.
   ///
@@ -1419,12 +1593,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Trust Certificate'**
   String get trustCa;
-
-  /// No description provided for @profileDownload.
-  ///
-  /// In en, this message translates to:
-  /// **'Profile Download'**
-  String get profileDownload;
 
   /// No description provided for @exportCA.
   ///
@@ -1630,12 +1798,6 @@ abstract class AppLocalizations {
   /// **'Connect'**
   String get connect;
 
-  /// No description provided for @reconnect.
-  ///
-  /// In en, this message translates to:
-  /// **'Reconnect'**
-  String get reconnect;
-
   /// No description provided for @remoteConnected.
   ///
   /// In en, this message translates to:
@@ -1653,12 +1815,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connect successful'**
   String get connectSuccess;
-
-  /// No description provided for @connectedRemote.
-  ///
-  /// In en, this message translates to:
-  /// **'Connected to remote'**
-  String get connectedRemote;
 
   /// No description provided for @connected.
   ///
@@ -1849,7 +2005,7 @@ abstract class AppLocalizations {
   /// No description provided for @proxyIgnoreDomain.
   ///
   /// In en, this message translates to:
-  /// **'Proxy ignores domain'**
+  /// **'Proxy Bypass'**
   String get proxyIgnoreDomain;
 
   /// No description provided for @domainWhitelistDescribe.
@@ -1905,18 +2061,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Material 3 is the latest version of Google’s open-source design system'**
   String get material3;
-
-  /// No description provided for @iosVpnBackgroundAudio.
-  ///
-  /// In en, this message translates to:
-  /// **'After turning on packet capture, exit to the background. In order to maintain the main UI thread for network communication, a silent audio playback will be enabled to keep the main thread running. Otherwise, it will only run in the background for 30 seconds. Do you agree to play audio in the background after turning on packet capture?'**
-  String get iosVpnBackgroundAudio;
-
-  /// No description provided for @markRead.
-  ///
-  /// In en, this message translates to:
-  /// **'Mark as read'**
-  String get markRead;
 
   /// No description provided for @autoRead.
   ///
@@ -1990,6 +2134,12 @@ abstract class AppLocalizations {
   /// **'CA Hash Name'**
   String get certHashName;
 
+  /// No description provided for @certHashShort.
+  ///
+  /// In en, this message translates to:
+  /// **'CA Hash'**
+  String get certHashShort;
+
   /// No description provided for @regExp.
   ///
   /// In en, this message translates to:
@@ -2007,18 +2157,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'QR Code'**
   String get qrCode;
-
-  /// No description provided for @jsonViewer.
-  ///
-  /// In en, this message translates to:
-  /// **'JSON Viewer'**
-  String get jsonViewer;
-
-  /// No description provided for @xmlViewer.
-  ///
-  /// In en, this message translates to:
-  /// **'XML Viewer'**
-  String get xmlViewer;
 
   /// No description provided for @textDiff.
   ///
@@ -2542,12 +2680,6 @@ abstract class AppLocalizations {
   /// **'Port'**
   String get mcpPort;
 
-  /// No description provided for @mcpAdvanced.
-  ///
-  /// In en, this message translates to:
-  /// **'Advanced settings'**
-  String get mcpAdvanced;
-
   /// No description provided for @mcpConfig.
   ///
   /// In en, this message translates to:
@@ -2589,30 +2721,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Learn more about MCP'**
   String get mcpLearnMore;
-
-  /// No description provided for @mcpSkills.
-  ///
-  /// In en, this message translates to:
-  /// **'Skills'**
-  String get mcpSkills;
-
-  /// No description provided for @mcpSkillsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'MCP Skills'**
-  String get mcpSkillsTitle;
-
-  /// No description provided for @mcpSkillsReadonly.
-  ///
-  /// In en, this message translates to:
-  /// **'Read-only traffic tools'**
-  String get mcpSkillsReadonly;
-
-  /// No description provided for @mcpSkillsRules.
-  ///
-  /// In en, this message translates to:
-  /// **'Rules, replay & environment tools'**
-  String get mcpSkillsRules;
 
   /// No description provided for @mcpEndpoint.
   ///
@@ -2686,48 +2794,6 @@ abstract class AppLocalizations {
   /// **'Stopped'**
   String get statusStopped;
 
-  /// No description provided for @mcpClientLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'AI client'**
-  String get mcpClientLabel;
-
-  /// No description provided for @mcpTransportLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Transport'**
-  String get mcpTransportLabel;
-
-  /// No description provided for @mcpCommandLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Connect command'**
-  String get mcpCommandLabel;
-
-  /// No description provided for @mcpClientsIntl.
-  ///
-  /// In en, this message translates to:
-  /// **'International'**
-  String get mcpClientsIntl;
-
-  /// No description provided for @mcpClientsDomestic.
-  ///
-  /// In en, this message translates to:
-  /// **'Chinese'**
-  String get mcpClientsDomestic;
-
-  /// No description provided for @mcpTransportStdio.
-  ///
-  /// In en, this message translates to:
-  /// **'stdio'**
-  String get mcpTransportStdio;
-
-  /// No description provided for @mcpTransportHttp.
-  ///
-  /// In en, this message translates to:
-  /// **'HTTP'**
-  String get mcpTransportHttp;
-
   /// No description provided for @mcpHintTerminal.
   ///
   /// In en, this message translates to:
@@ -2776,12 +2842,6 @@ abstract class AppLocalizations {
   /// **'Start chat'**
   String get mcpStartChat;
 
-  /// No description provided for @mcpOpenTerminal.
-  ///
-  /// In en, this message translates to:
-  /// **'Run in terminal'**
-  String get mcpOpenTerminal;
-
   /// No description provided for @mcpSetupDone.
   ///
   /// In en, this message translates to:
@@ -2824,12 +2884,6 @@ abstract class AppLocalizations {
   /// **'MCP service failed to start'**
   String get mcpStartFailed;
 
-  /// No description provided for @mcpPrivacyHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Only listens on 127.0.0.1 (this machine). Data leaves the app only when an AI client explicitly requests it via a tool.'**
-  String get mcpPrivacyHint;
-
   /// No description provided for @replayTasks.
   ///
   /// In en, this message translates to:
@@ -2871,6 +2925,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Resume'**
   String get resume;
+
+  /// No description provided for @overview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overview;
+
+  /// No description provided for @network.
+  ///
+  /// In en, this message translates to:
+  /// **'Network'**
+  String get network;
+
+  /// No description provided for @trafficControl.
+  ///
+  /// In en, this message translates to:
+  /// **'Traffic Control'**
+  String get trafficControl;
+
+  /// No description provided for @rulesPageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Click a row to open its window'**
+  String get rulesPageHint;
+
+  /// No description provided for @notEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enabled'**
+  String get notEnabled;
+
+  /// No description provided for @statusEnabledRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled · {count} rules'**
+  String statusEnabledRules(int count);
+
+  /// No description provided for @statusEnabledScripts.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled · {count} scripts'**
+  String statusEnabledScripts(int count);
+
+  /// No description provided for @rulesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} rules'**
+  String rulesCount(int count);
+
+  /// No description provided for @scriptsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} scripts'**
+  String scriptsCount(int count);
+
+  /// No description provided for @requestBlockDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Block matching requests, disconnect or return an error'**
+  String get requestBlockDesc;
+
+  /// No description provided for @requestRewriteDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewrite request/response line, headers and body by rule'**
+  String get requestRewriteDesc;
+
+  /// No description provided for @requestMapDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Map requests to a local file or a remote URL'**
+  String get requestMapDesc;
+
+  /// No description provided for @requestCryptoDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypt or decrypt request and response bodies'**
+  String get requestCryptoDesc;
+
+  /// No description provided for @scriptDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Handle requests and responses with JavaScript'**
+  String get scriptDesc;
+
+  /// No description provided for @breakpointDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Intercept requests/responses, modify, then resume'**
+  String get breakpointDesc;
+
+  /// No description provided for @allFunctions.
+  ///
+  /// In en, this message translates to:
+  /// **'All functions'**
+  String get allFunctions;
+
+  /// No description provided for @customizeToolbar.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize toolbar'**
+  String get customizeToolbar;
+
+  /// No description provided for @restoreDefaults.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore defaults'**
+  String get restoreDefaults;
+
+  /// No description provided for @pinnedDragSort.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned (drag to reorder)'**
+  String get pinnedDragSort;
+
+  /// No description provided for @pinToolsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'All tools (tap + to pin to toolbar)'**
+  String get pinToolsHint;
+
+  /// No description provided for @image.
+  ///
+  /// In en, this message translates to:
+  /// **'Image'**
+  String get image;
+
+  /// No description provided for @filtered.
+  ///
+  /// In en, this message translates to:
+  /// **'Filtered'**
+  String get filtered;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

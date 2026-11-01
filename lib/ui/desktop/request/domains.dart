@@ -141,20 +141,21 @@ class DomainWidgetState extends State<DomainList> with AutomaticKeepAliveClientM
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    var list = containerMap.values;
+    // values 是惰性 Iterable，elementAt 每次 O(n)；转成 List 保证按下标取值 O(1)
+    var list = containerMap.values.toList();
 
     //根究搜素文本过滤
     if (searchModel?.isNotEmpty == true) {
       searchView = searchFilter(searchModel!);
-      list = searchView.values;
+      list = searchView.values.toList();
       selectionController.prune(list.expand((e) => e.body).map((e) => e.request.requestId).toSet());
     } else {
       searchView.clear();
     }
 
     return widget.shrinkWrap
-        ? SingleChildScrollView(child: Column(children: list.toList()))
-        : ListView.builder(itemCount: list.length, itemBuilder: (_, index) => list.elementAt(index));
+        ? SingleChildScrollView(child: Column(children: list))
+        : ListView.builder(itemCount: list.length, itemBuilder: (_, index) => list[index]);
   }
 
   ///搜索
@@ -535,34 +536,44 @@ class _DomainRequestsState extends State<DomainRequests> {
 
   @override
   Widget build(BuildContext context) {
+    // 收起时不构建子行（Offstage 只是不绘制，仍会构建整棵子树——域名下几千个请求会全部常驻）
     return Column(children: [
       _hostWidget(widget.domain),
-      Offstage(offstage: !selected, child: Column(children: widget.body.toList()))
+      if (selected) Column(children: widget.body.toList())
     ]);
   }
 
-  //domain title
+  //domain title（结构沿用旧版：Material 箭头 + 域名 + 右侧 app 图标；无底色无分割线。
+  //Material+InkWell：hover/水波纹由组件自身处理，不再 setState 重建子树）
   Widget _hostWidget(String title) {
-    var host = GestureDetector(
-        onSecondaryTapDown: (details) => menu(details),
-        child: ListTile(
-            minLeadingWidth: 25,
-            leading: Icon(selected ? Icons.arrow_drop_down : Icons.arrow_right, size: 18),
-            trailing: trailing,
-            dense: true,
-            horizontalTitleGap: 0,
-            contentPadding: const EdgeInsets.only(left: 3, right: 8),
-            visualDensity: const VisualDensity(vertical: -3.6),
-            title: Text(title,
-                textAlign: TextAlign.left,
-                style: const TextStyle(fontSize: 14),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis),
+    var theme = Theme.of(context);
+    var host = Material(
+        color: Colors.transparent,
+        child: InkWell(
+            onSecondaryTapDown: (details) => menu(details),
             onTap: () {
               setState(() {
                 selected = !selected;
               });
-            }));
+            },
+            hoverColor: rowHoverColor(theme),
+            child: Container(
+                height: 40,
+                padding: const EdgeInsets.only(left: 6, right: 10),
+            child: Row(children: [
+              SizedBox(
+                  width: 25,
+                  child: Icon(selected ? Icons.arrow_drop_down : Icons.arrow_right,
+                      size: 18, color: theme.colorScheme.onSurfaceVariant)),
+              Expanded(
+                  child: Text(title,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis)),
+              if (trailing != null) ...[const SizedBox(width: 8), trailing!],
+            ]))));
 
     return ColorTransition(
         key: transitionState,
@@ -669,3 +680,6 @@ class HostWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis)));
   }
 }
+
+
+
