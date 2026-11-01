@@ -3,6 +3,11 @@ name: build-apk
 on:
   push:
     branches: [main]
+    # 纯文档 / 仅 CI 配置的改动不必重新出包（发布产物只跟代码与版本号有关）
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.github/**'
   workflow_dispatch:
   workflow_call:
 
